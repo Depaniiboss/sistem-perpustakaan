@@ -1,0 +1,642 @@
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+
+/* BODY */
+
+body {
+
+    min-height: 100vh;
+
+    padding: 30px;
+
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, .65),
+            rgba(0, 0, 0, .65)
+        ),
+        url("https://images.unsplash.com/photo-1568667256549-094345857637?fm=jpg&q=60&w=3000&auto=format&fit=crop")
+        center / cover no-repeat fixed;
+
+}
+
+
+/* CONTAINER */
+
+.container {
+
+    max-width: 1200px;
+
+    margin: auto;
+
+}
+
+
+/* HEADER */
+
+.header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 30px;
+
+    margin-bottom: 30px;
+
+    color: white;
+
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, .15);
+
+    backdrop-filter: blur(12px);
+
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, .3);
+
+}
+
+
+.header h1 {
+
+    font-size: 32px;
+
+}
+
+
+.header p {
+
+    margin-top: 6px;
+
+    font-size: 16px;
+
+    color: rgba(255,255,255,.8);
+
+}
+
+
+/* TOMBOL TAMBAH */
+
+.btn-tambah {
+
+    border: none;
+
+    padding: 12px 18px;
+
+    border-radius: 10px;
+
+    background: #00c853;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .3s;
+
+}
+
+
+.btn-tambah:hover {
+
+    background: #00e676;
+
+    transform: translateY(-2px);
+
+}
+
+
+/* CARD */
+
+.card {
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    background: rgba(255,255,255,.15);
+
+    backdrop-filter: blur(10px);
+
+    -webkit-backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255,255,255,.2);
+
+    box-shadow:
+        0 8px 32px rgba(0,0,0,.2);
+
+}
+
+
+/* CARD HEADER */
+
+.card-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+
+}
+
+
+.card-header h2 {
+
+    color: white;
+
+}
+
+
+/* SEARCH */
+
+.search-box {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 12px;
+
+    background: white;
+
+    border-radius: 10px;
+
+}
+
+
+.search-box input {
+
+    width: 220px;
+
+    border: none;
+
+    outline: none;
+
+    font-size: 14px;
+
+}
+
+
+/* TABLE */
+
+.table-container {
+
+    overflow-x: auto;
+
+}
+
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    overflow: hidden;
+
+    border-radius: 15px;
+
+}
+
+
+th {
+
+    padding: 15px;
+
+    background: #4a148c;
+
+    color: white;
+
+}
+
+
+td {
+
+    padding: 12px;
+
+    text-align: center;
+
+    background: white;
+
+}
+
+
+tr:hover td {
+
+    background: #f3e5f5;
+
+    transition: .3s;
+
+}
+
+
+/* AKSI */
+
+.aksi {
+
+    white-space: nowrap;
+
+}
+
+
+/* EDIT */
+
+.btn-edit {
+
+    display: inline-block;
+
+    padding: 7px 12px;
+
+    margin: 2px;
+
+    border-radius: 7px;
+
+    background: #2196F3;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+}
+
+
+.btn-edit:hover {
+
+    background: #1976D2;
+
+}
+
+
+/* DELETE */
+
+.btn-delete {
+
+    display: inline-block;
+
+    padding: 7px 12px;
+
+    margin: 2px;
+
+    border-radius: 7px;
+
+    background: #F44336;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+}
+
+
+.btn-delete:hover {
+
+    background: #D32F2F;
+
+}
+
+
+/* DATA KOSONG */
+
+.data-kosong {
+
+    padding: 30px;
+
+    color: #666;
+
+}
+
+
+/* MODAL */
+
+.modal {
+
+    display: none;
+
+    position: fixed;
+
+    z-index: 1000;
+
+    inset: 0;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+
+    background: rgba(0,0,0,.65);
+
+}
+
+
+/* MODAL AKTIF */
+
+.modal.show {
+
+    display: flex;
+
+}
+
+
+/* MODAL CONTENT */
+
+.modal-content {
+
+    width: 100%;
+
+    max-width: 450px;
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    background: rgba(255,255,255,.95);
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,.4);
+
+    animation: modalIn .3s ease;
+
+}
+
+
+/* MODAL HEADER */
+
+.modal-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+
+}
+
+
+.modal-header h2 {
+
+    color: #66160A;
+
+}
+
+
+/* CLOSE */
+
+.btn-close {
+
+    width: 35px;
+
+    height: 35px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #eee;
+
+    color: #333;
+
+    font-size: 25px;
+
+    cursor: pointer;
+
+}
+
+
+.btn-close:hover {
+
+    background: #ddd;
+
+}
+
+
+/* FORM */
+
+.form-group {
+
+    margin-bottom: 15px;
+
+}
+
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-weight: bold;
+
+    color: #333;
+
+}
+
+
+.form-group input,
+.form-group textarea {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    font-size: 14px;
+
+}
+
+
+.form-group input:focus,
+.form-group textarea:focus {
+
+    border-color: #701B1D;
+
+}
+
+
+.form-group textarea {
+
+    resize: vertical;
+
+}
+
+
+/* FORM BUTTON */
+
+.form-buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 20px;
+
+}
+
+
+.form-buttons button {
+
+    flex: 1;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+/* BATAL */
+
+.btn-batal {
+
+    background: #eee;
+
+    color: #333;
+
+}
+
+
+.btn-batal:hover {
+
+    background: #ddd;
+
+}
+
+
+/* SIMPAN */
+
+.btn-simpan {
+
+    background: #00c853;
+
+    color: white;
+
+}
+
+
+.btn-simpan:hover {
+
+    background: #00a844;
+
+}
+
+
+/* ANIMATION */
+
+@keyframes modalIn {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(-20px) scale(.95);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0) scale(1);
+
+    }
+
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+    body {
+
+        padding: 15px;
+
+    }
+
+
+    .header {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 20px;
+
+    }
+
+
+    .btn-tambah {
+
+        width: 100%;
+
+    }
+
+
+    .card-header {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 15px;
+
+    }
+
+
+    .search-box input {
+
+        width: 100%;
+
+    }
+
+
+    .search-box {
+
+        width: 100%;
+
+    }
+
+
+    table {
+
+        min-width: 850px;
+
+    }
+
+}
+```
