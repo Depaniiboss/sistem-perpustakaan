@@ -1,18 +1,22 @@
+```php
 <?php
 session_start();
 include '../config/koneksi.php';
 
+/* Mengecek apakah user sudah login */
 if (!isset($_SESSION['login'])) {
     header("Location: ../auth/login.php");
     exit;
 }
 
+/* Mengambil semua data buku dari database */
 $data = mysqli_query($conn, "
     SELECT *
     FROM buku
     ORDER BY nomorbuku ASC
 ");
 
+/* Mengecek apakah query berhasil */
 if (!$data) {
     die("Query Error: " . mysqli_error($conn));
 }
@@ -22,30 +26,276 @@ if (!$data) {
 <html lang="id">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="icon" type="image/jpeg" href="../assets/icon.jpeg">
 
     <title>Dashboard Inventory Buku</title>
 
-    <!-- CSS Sidebar -->
+
+    <!-- =================================================
+         CSS LAMA
+    ================================================== -->
+
     <link rel="stylesheet" href="../assets/sidebar.css">
 
-    <!-- CSS Dashboard -->
     <link rel="stylesheet" href="../assets/dashboard.css">
+
+
+    <!-- =================================================
+         CSS TAMBAHAN
+         Untuk membuat Header Liquid Glass
+    ================================================== -->
+
+    <style>
+
+        /* ================================
+           HEADER LIQUID GLASS
+        ================================= */
+
+        .header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 25px;
+
+            padding: 25px 30px;
+
+            margin-bottom: 25px;
+
+            border-radius: 20px;
+
+            /* Efek transparan */
+
+            background: rgba(255, 255, 255, 0.12);
+
+            /* Garis tipis */
+
+            border: 1px solid rgba(255, 255, 255, 0.25);
+
+            /* Efek blur */
+
+            backdrop-filter: blur(18px);
+
+            -webkit-backdrop-filter: blur(18px);
+
+            /* Bayangan */
+
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.08),
+                inset 0 1px 1px rgba(255, 255, 255, 0.25);
+
+        }
+
+
+        /* ================================
+           BAGIAN SEARCH + SELECT
+        ================================= */
+
+        .header-search {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        /* ================================
+           SEARCH BOX
+        ================================= */
+
+        .search-box {
+
+            display: flex;
+
+            align-items: center;
+
+            margin: 0;
+
+        }
+
+
+        .search-box input {
+
+            width: 300px;
+
+            padding: 12px 15px;
+
+            border-radius: 12px;
+
+            border: 1px solid rgba(255, 255, 255, 0.35);
+
+            background: rgba(255, 255, 255, 0.25);
+
+            backdrop-filter: blur(10px);
+
+            -webkit-backdrop-filter: blur(10px);
+
+            font-size: 15px;
+
+            color: #333;
+
+            outline: none;
+
+            transition: 0.25s;
+
+        }
+
+
+        /* Saat search diklik */
+
+        .search-box input:focus {
+
+            background: rgba(255, 255, 255, 0.4);
+
+            border-color: rgba(52, 152, 219, 0.6);
+
+            box-shadow:
+                0 0 0 3px rgba(52, 152, 219, 0.12);
+
+        }
+
+
+        /* Warna tulisan placeholder */
+
+        .search-box input::placeholder {
+
+            color: #666;
+
+        }
+
+
+        /* ================================
+           DROPDOWN BUKU
+        ================================= */
+
+        #nomorbuku {
+
+            width: 300px;
+
+            padding: 12px 15px;
+
+            margin: 0;
+
+            border-radius: 12px;
+
+            border: 1px solid rgba(255, 255, 255, 0.35);
+
+            background: rgba(255, 255, 255, 0.25);
+
+            backdrop-filter: blur(10px);
+
+            -webkit-backdrop-filter: blur(10px);
+
+            font-size: 15px;
+
+            color: #333;
+
+            outline: none;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+
+        }
+
+
+        /* Saat dropdown dipilih */
+
+        #nomorbuku:focus {
+
+            background: rgba(255, 255, 255, 0.4);
+
+            border-color: rgba(52, 152, 219, 0.6);
+
+        }
+
+
+        /* ================================
+           RESPONSIVE
+        ================================= */
+
+        @media (max-width: 900px) {
+
+            .header {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+            }
+
+
+            .header-search {
+
+                width: 100%;
+
+            }
+
+
+            .search-box {
+
+                width: 100%;
+
+            }
+
+
+            .search-box input {
+
+                width: 100%;
+
+            }
+
+
+            #nomorbuku {
+
+                width: 100%;
+
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-    <!-- Tombol Menu -->
-    <button class="menu-btn" id="menuBtn">☰</button>
 
-    <!-- Sidebar -->
+    <!-- =================================================
+         TOMBOL MENU
+    ================================================== -->
+
+    <button class="menu-btn" id="menuBtn">
+        ☰
+    </button>
+
+
+    <!-- =================================================
+         SIDEBAR
+    ================================================== -->
+
     <div class="sidebar" id="sidebar">
 
         <div class="sidebar-header">
+
             📚 MENU
+
         </div>
+
 
         <div class="nav-item">
 
@@ -53,9 +303,11 @@ if (!$data) {
                 📚 Pinjam Buku
             </a>
 
+
             <a href="../dashboard/daftar_pinjam.php">
                 📖 Daftar Peminjaman
             </a>
+
 
             <a href="../auth/logout.php">
                 🚪 Logout
@@ -65,94 +317,257 @@ if (!$data) {
 
     </div>
 
-    <!-- Overlay -->
+
+    <!-- Overlay untuk mobile -->
+
     <div class="overlay" id="overlay"></div>
 
-    <!-- Container -->
+
+    <!-- =================================================
+         CONTAINER
+    ================================================== -->
+
     <div class="container">
 
-        <!-- Header -->
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
         <div class="header">
+
+
+            <!-- Informasi user -->
 
             <div>
 
-                <h1>Liblary</h1>
+                <h1>
+                    Liblary
+                </h1>
+
 
                 <p>
+
                     Selamat datang,
+
                     <strong>
+
                         <?= htmlspecialchars($_SESSION['nama_karyawan']); ?>
+
                     </strong>
+
                 </p>
+
+            </div>
+
+
+            <!-- Search dan dropdown -->
+
+<div class="header-search">
+
+    <!-- Search -->
+    <div class="search-box">
+        <input
+            type="text"
+            id="searchBuku"
+            placeholder="🔍 Cari judul atau kode buku..."
+        >
+    </div>
+
+    <!-- Pilihan buku BK -->
+    <select name="nomorbuku" id="nomorbuku">
+        <?php while ($buku = mysqli_fetch_assoc($data)): ?>
+            <option value="<?= $buku['nomorbuku']; ?>">
+                <?= htmlspecialchars($buku['kode_buku']); ?> -
+                <?= htmlspecialchars($buku['judul']); ?>
+            </option>
+        <?php endwhile; ?>
+    </select>
+
+</div>
+
+                    /*
+                     * $data berasal dari query:
+                     *
+                     * SELECT * FROM buku
+                     *
+                     * mysqli_fetch_assoc()
+                     * mengambil data satu per satu.
+                     */
+
+                    while ($buku = mysqli_fetch_assoc($data)):
+
+                    ?>
+
+                        <option
+
+                            value="<?= $buku['nomorbuku']; ?>"
+
+                        >
+
+                            <?= htmlspecialchars($buku['kode_buku']); ?>
+
+                            -
+
+                            <?= htmlspecialchars($buku['judul']); ?>
+
+                        </option>
+
+
+                    <?php endwhile; ?>
+
+                </select>
 
             </div>
 
         </div>
 
-        <!-- Card -->
+
+        <!-- =================================================
+             CARD BUKU
+        ================================================== -->
+
         <div class="card">
+
 
             <div class="card-header">
 
-                <h2>📚 Buku Tersedia Saat Ini</h2>
+                <h2>
+                    📚 Buku Tersedia Saat Ini
+                </h2>
 
             </div>
 
-            <!-- Tabel Buku -->
+
+            <!-- =================================================
+                 TABEL BUKU
+            ================================================== -->
+
             <table>
 
                 <thead>
 
                     <tr>
-                        <th>No</th>
-                        <th>Kode Buku</th>
-                        <th>Judul</th>
-                        <th>Kategori</th>
-                        <th>Penulis</th>
-                        <th>Penerbit</th>
+
+                        <th>
+                            No
+                        </th>
+
+                        <th>
+                            Kode Buku
+                        </th>
+
+                        <th>
+                            Judul
+                        </th>
+
+                        <th>
+                            Kategori
+                        </th>
+
+                        <th>
+                            Penulis
+                        </th>
+
+                        <th>
+                            Penerbit
+                        </th>
+
                     </tr>
 
                 </thead>
 
+
                 <tbody>
 
+
                     <?php
+
+                    /*
+                     * Query ulang karena $data sebelumnya
+                     * sudah digunakan oleh dropdown.
+                     */
+
+                    $data_tabel = mysqli_query($conn, "
+
+                        SELECT *
+
+                        FROM buku
+
+                        ORDER BY nomorbuku ASC
+
+                    ");
+
+
                     $no = 1;
 
-                    while ($row = mysqli_fetch_assoc($data)) {
+
+                    while ($row = mysqli_fetch_assoc($data_tabel)):
+
                     ?>
 
                         <tr>
 
+
+                            <!-- Nomor urut -->
+
                             <td>
+
                                 <?= $no++; ?>
+
                             </td>
 
+
+                            <!-- Kode buku -->
+
                             <td>
+
                                 <?= htmlspecialchars($row['kode_buku']); ?>
+
                             </td>
 
+
+                            <!-- Judul -->
+
                             <td>
+
                                 <?= htmlspecialchars($row['judul']); ?>
+
                             </td>
 
+
+                            <!-- Kategori -->
+
                             <td>
+
                                 <?= htmlspecialchars($row['kategori']); ?>
+
                             </td>
 
+
+                            <!-- Penulis -->
+
                             <td>
+
                                 <?= htmlspecialchars($row['penulis']); ?>
+
                             </td>
 
+
+                            <!-- Penerbit -->
+
                             <td>
+
                                 <?= htmlspecialchars($row['penerbit']); ?>
+
                             </td>
+
 
                         </tr>
 
-                    <?php
-                    }
-                    ?>
+
+                    <?php endwhile; ?>
+
 
                 </tbody>
 
@@ -162,20 +577,139 @@ if (!$data) {
 
     </div>
 
-    <!-- JavaScript Sidebar -->
+
+    <!-- =================================================
+         JAVASCRIPT SIDEBAR
+    ================================================== -->
+
     <script src="../assets/sidebar.js"></script>
 
-    <!-- JavaScript Dashboard -->
     <script src="../assets/dashboard.js"></script>
 
-</body>
-<script>
-history.pushState(null, "", location.href);
 
-window.addEventListener("popstate", function () {
-    history.pushState(null, "", location.href);
-    location.reload();
-});
-</script>
+    <!-- =================================================
+         JAVASCRIPT SEARCH
+    ================================================== -->
+
+    <script>
+
+        /* Mengambil elemen search */
+
+        const searchBuku =
+            document.getElementById("searchBuku");
+
+
+        /* Mengambil dropdown */
+
+        const selectBuku =
+            document.getElementById("nomorbuku");
+
+
+        /* Menjalankan search ketika user mengetik */
+
+        searchBuku.addEventListener("input", function () {
+
+
+            /* Mengambil teks yang diketik */
+
+            const keyword =
+                this.value.toLowerCase().trim();
+
+
+            /* Mengambil semua option */
+
+            const options =
+                selectBuku.querySelectorAll("option");
+
+
+            /* Penanda apakah buku ditemukan */
+
+            let ditemukan = false;
+
+
+            options.forEach(function (option) {
+
+
+                /* Mengambil teks option */
+
+                const text =
+                    option.textContent.toLowerCase();
+
+
+                /* Mengecek apakah teks cocok */
+
+                if (text.includes(keyword)) {
+
+
+                    /* Tampilkan option */
+
+                    option.hidden = false;
+
+
+                    /* Pilih hasil pertama */
+
+                    if (!ditemukan) {
+
+                        selectBuku.value =
+                            option.value;
+
+                        ditemukan = true;
+
+                    }
+
+
+                } else {
+
+
+                    /* Sembunyikan option */
+
+                    option.hidden = true;
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+
+    <!-- =================================================
+         HISTORY
+    ================================================== -->
+
+    <script>
+
+        /* Menyimpan halaman di history browser */
+
+        history.pushState(
+            null,
+            "",
+            location.href
+        );
+
+
+        /* Mencegah kembali ke halaman sebelumnya */
+
+        window.addEventListener(
+            "popstate",
+            function () {
+
+                history.pushState(
+                    null,
+                    "",
+                    location.href
+                );
+
+                location.reload();
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
 </html>
 ```

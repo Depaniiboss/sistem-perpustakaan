@@ -11,13 +11,13 @@ window.addEventListener("popstate", function () {
 <?php
 session_start();
 include '../config/koneksi.php';
+
 if(!isset($_SESSION['login'])){
     header("Location: ../auth/login.php");
     exit;
 }
 
 if(isset($_POST['simpan'])){
-
     $kode_buku = $_POST['kode_buku'];
     $judul = $_POST['judul'];
     $kategori = $_POST['kategori'];
@@ -30,9 +30,30 @@ if(isset($_POST['simpan'])){
         VALUES
         ('$kode_buku','$judul','$kategori','$penulis','$penerbit')
     ");
+
+    // Redirect kembali ke halaman ini agar kode_buku otomatis langsung diperbarui
+    header("Location: tambah.php");
+    exit;
 }
 
-$data = mysqli_query($conn,"SELECT * FROM buku");
+// 1. Ambil semua kode buku yang ada dan urutkan dari yang terkecil
+$query = "SELECT kode_buku FROM buku WHERE kode_buku LIKE 'BK%' ORDER BY kode_buku ASC";
+$result = mysqli_query($conn, $query);
+
+$existing_numbers = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    // Ambil angkanya saja, misal 'BK005' -> 5
+    $existing_numbers[] = (int) substr($row['kode_buku'], 2);
+}
+
+// 2. Cari angka terkecil yang belum digunakan (mulai dari 1)
+$next_number = 1;
+while (in_array($next_number, $existing_numbers)) {
+    $next_number++;
+}
+
+// 3. Format kembali jadi kode buku (Disimpan ke variabel $kode_buku agar sesuai dengan HTML)
+$kode_buku = 'BK' . str_pad($next_number, 3, '0', STR_PAD_LEFT);
 ?>
 
 <!DOCTYPE html>
@@ -51,7 +72,7 @@ $data = mysqli_query($conn,"SELECT * FROM buku");
 
 body{
     min-height:100vh;
-     background:
+    background:
     linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.65)),
     url("https://images.unsplash.com/photo-1568667256549-094345857637?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGJ1a3UlMjBwZXJwdXN0YWthYW58ZW58MHx8MHx8fDA%3D")
     center/cover no-repeat fixed;
@@ -71,7 +92,7 @@ body{
     border-radius:20px;
     color:white;
     animation:fadeDown .8s ease;
-	margin-bottom: 40px;
+    margin-bottom: 40px;
     background:rgba(255,255,255,.15);
     backdrop-filter:blur(12px);
     padding:30px;
@@ -95,6 +116,7 @@ body{
     border-radius:10px;
     transition:.3s;
 }
+
 .card{
     background:rgba(255,255,255,.15);
     backdrop-filter:blur(10px);
@@ -120,6 +142,13 @@ input{
     border-radius:10px;
     margin-bottom:15px;
     outline:none;
+}
+
+/* Style tambahan khusus input readonly agar terlihat jelas bahwa field ini dikunci */
+input[readonly]{
+    background: rgba(235, 235, 235, 0.7);
+    color: #333;
+    cursor: not-allowed;
 }
 
 button{
@@ -195,38 +224,39 @@ tr:hover td{
 </head>
 <body>
 
-	<div class="header">
-<h1>Tambah Buku</h1>
-<p>Selamat datang, <strong><?= htmlspecialchars($_SESSION['nama_karyawan']); ?></strong></p>
-
-<a href="../admin/admin-dashboard.php">Kembali</a>
-	</div>
-	
-<div class="container">
-
-<div class="card">
-<h2>Form Input Buku</h2><br>
-
-<form method="POST">
-
-<label>Kode Buku</label>
-<input type="text" name="kode_buku" placeholder="BK***" required>
-
-<label>Judul Buku</label>
-<input type="text" name="judul" placeholder="Judul Buku" required>
-
-<label>Kategori</label>
-<input type="text" name="kategori" placeholder="Kategori Buku" required>
-
-<label>Penulis</label>
-<input type="text" name="penulis" placeholder="Nama Penulis" required>
-
-<label>Penerbit</label>
-<input type="text" name="penerbit" placeholder="Nama Penerbit">
-
-<button type="submit" name="simpan">
-    Simpan Buku
-</button>
-
-</form>
+<div class="header">
+    <h1>Tambah Buku</h1>
+    <p>Selamat datang, <strong><?= htmlspecialchars($_SESSION['nama_karyawan']); ?></strong></p>
+    <a href="../admin/admin-dashboard.php">Kembali</a>
 </div>
+    
+<div class="container">
+    <div class="card">
+        <h2>Form Input Buku</h2><br>
+
+        <form method="POST">
+            <label>Kode Buku Otomatis</label>
+            <!-- Menggunakan $kode_buku dan atribut readonly agar tidak bisa diedit manual -->
+            <input type="text" name="kode_buku" value="<?= $kode_buku; ?>" readonly required>
+
+            <label>Judul Buku</label>
+            <input type="text" name="judul" placeholder="Judul Buku" required>
+
+            <label>Kategori</label>
+            <input type="text" name="kategori" placeholder="Kategori Buku" required>
+
+            <label>Penulis</label>
+            <input type="text" name="penulis" placeholder="Nama Penulis" required>
+
+            <label>Penerbit</label>
+            <input type="text" name="penerbit" placeholder="Nama Penerbit">
+
+            <button type="submit" name="simpan">
+                Simpan Buku
+            </button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

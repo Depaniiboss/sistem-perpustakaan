@@ -31,13 +31,20 @@ if (mysqli_num_rows($cek) == 0) {
 $hapus = mysqli_query($conn, "DELETE FROM buku WHERE nomorbuku='$id'");
 
 if ($hapus) {
+    // Ambil halaman asal (referer), atau fallback ke halaman utama jika kosong
+    $back = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'sub-index.php';
+    
     echo "
     <script>
         alert('Data buku berhasil dihapus!');
-        window.location.href='sub-index.php';
+        window.location.href = '$back';
     </script>";
     exit;
 } else {
-    die("Gagal menghapus data: " . mysqli_error($conn));
+    echo "
+    <script>
+        alert('Data buku gagal dihapus!');
+        window.history.back();
+    </script>";
+    exit;
 }
-?>

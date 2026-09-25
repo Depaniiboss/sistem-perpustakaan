@@ -12,6 +12,7 @@ if (!isset($_SESSION['login'])) {
 ========================================================= */
 $query = "SELECT 
             pb.id_peminjam,
+            pb.id_user,
             u.nama_karyawan,
             b.kode_buku,
             b.judul,
@@ -103,10 +104,13 @@ if (!$data) {
                             <td><?= htmlspecialchars($row['jumlah_pinjam']); ?></td>
                             <td><?= htmlspecialchars($row['tanggal_pinjam']); ?></td>
                             <td><?= htmlspecialchars($row['tanggal_jatuh_tempo']); ?></td>
+                           
                             <td class="aksi">
-                                <a href="hapus_daftar_pinjam.php?id=<?= $row['id_peminjam']; ?>" class="btn-delete" onclick="return confirm('Yakin ingin menghapus data peminjaman ini?');">
-                                    🗑 Hapus
-                                </a>
+                                <?php if($row['id_user'] == $_SESSION['id_user']): ?>
+                                    <a href="hapus_daftar_pinjam.php?id=<?= $row['id_peminjam']; ?>" class="btn-delete" onclick="return confirm('Yakin ingin menghapus data peminjaman ini?');">
+                                        🗑 Hapus
+                                    </a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                         <?php

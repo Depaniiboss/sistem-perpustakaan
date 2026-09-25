@@ -52,10 +52,6 @@ if (!$data) {
                 ➕ Tambah Buku
             </a>
 
-            <a href="pinjam_buku.php">
-                📚 Pinjam Buku
-            </a>
-
             <a href="../dashboard/daftar_pinjam.php">
                 📖 Daftar Peminjaman
             </a>
