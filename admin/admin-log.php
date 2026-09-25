@@ -11,7 +11,7 @@ if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
 
     // Jika admin, langsung ke dashboard admin
     if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
-        header("Location: ../dashboard/admin_dashboard.php");
+        header("Location: admin-dashboard.php");
         exit;
     }
 
@@ -49,16 +49,6 @@ if (isset($_POST['login'])) {
         if ($user['role'] !== 'admin') {
 
             $error = "❌ Akses ditolak! Halaman ini khusus untuk Admin.";
-
-         // Redirect halaman sesuai role pengguna
-        if ($user['role'] === 'admin') {
-            header("Location: ../admin/admin-dashboard.php");
-        } elseif ($user['role'] === 'karyawan') {
-            header("Location: ../dashboard/sub-index.php");
-        } else {
-            header("Location: ../dashboard/sub-index.php");
-        }
-        exit;
 
         } else {
 
@@ -409,7 +399,7 @@ button:hover{
 
 
         <a
-            href="../sub-index.php"
+            href="../index.php"
             class="btn-keluar"
         >
             ← Keluar

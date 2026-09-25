@@ -27,6 +27,7 @@ if (isset($_POST['login'])) {
     if ($user = mysqli_fetch_assoc($result)) {
         // Verifikasi password (Mendukung password_hash & fallback MD5)
         if (password_verify($password, $user['password']) || md5($password) === $user['password']) {
+            session_regenerate_id(true);
             
             $_SESSION['login'] = true;
             $_SESSION['id_user'] = $user['id_user'];

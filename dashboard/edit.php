@@ -4,6 +4,12 @@ ini_set('display_errors', 1);
 
 include '../config/koneksi.php';
 
+session_start();
+if (!isset($_SESSION['login']) || $_SESSION['login'] !== true || ($_SESSION['role'] ?? '') !== 'admin') {
+    header("Location: ../auth/login.php");
+    exit;
+}
+
 // =========================
 // CEK KONEKSI DATABASE
 // =========================

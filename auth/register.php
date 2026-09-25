@@ -5,22 +5,26 @@ $pesan = "";
 
 if (isset($_POST['register'])) {
 
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $password = md5($_POST['password']);
-    $nama_karyawan = mysqli_real_escape_string($conn, $_POST['nama_karyawan']);
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $nama_karyawan = trim($_POST['nama_karyawan'] ?? '');
 
-    $cek = mysqli_query($conn, "SELECT * FROM users WHERE username='$username'");
+    $cek = mysqli_prepare($conn, "SELECT id_user FROM users WHERE username = ?");
+    mysqli_stmt_bind_param($cek, "s", $username);
+    mysqli_stmt_execute($cek);
+    $hasil_cek = mysqli_stmt_get_result($cek);
 
-    if (mysqli_num_rows($cek) > 0) {
+    if ($username === '' || $password === '' || $nama_karyawan === '') {
+        $pesan = "<p style='color:yellow;'>Semua kolom wajib diisi!</p>";
+    } elseif (mysqli_num_rows($hasil_cek) > 0) {
         $pesan = "<p style='color:yellow;'>Username sudah digunakan!</p>";
     } else {
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $simpan = mysqli_prepare($conn, "INSERT INTO users (username, password, nama_karyawan) VALUES (?, ?, ?)");
+        mysqli_stmt_bind_param($simpan, "sss", $username, $password_hash, $nama_karyawan);
+        $berhasil = mysqli_stmt_execute($simpan);
 
-        $simpan = mysqli_query($conn, "
-            INSERT INTO users(username,password,nama_karyawan)
-            VALUES('$username','$password','$nama_karyawan')
-        ");
-
-        if ($simpan) {
+        if ($berhasil) {
             $pesan = "<p style='color:lightgreen;'>Register berhasil!</p>";
         } else {
             $pesan = "<p style='color:red;'>Register gagal!</p>";

@@ -2,7 +2,7 @@
 session_start();
 include '../config/koneksi.php';
 
-if (!isset($_SESSION['login'])) {
+if (!isset($_SESSION['login']) || $_SESSION['login'] !== true || ($_SESSION['role'] ?? '') !== 'admin') {
     header("Location: ../auth/login.php");
     exit;
 }
@@ -54,6 +54,10 @@ if (!$data) {
 
             <a href="../dashboard/daftar_pinjam.php">
                 📖 Daftar Peminjaman
+            </a>
+
+            <a href="../dashboard/pengembalian_buku.php">
+                ↩️ Pengembalian Buku
             </a>
 
             <a href="../admin/kelola_user.php">
@@ -192,4 +196,3 @@ if (!$data) {
 </body>
 
 </html>
-```

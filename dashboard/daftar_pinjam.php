@@ -7,6 +7,20 @@ if (!isset($_SESSION['login'])) {
     exit;
 }
 
+// Pastikan tabel pengembalian tersedia sebelum memuat peminjaman yang masih aktif.
+$buatTabelPengembalian = mysqli_query($conn, "
+    CREATE TABLE IF NOT EXISTS pengembalian_buku (
+        id_pengembalian BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+        id_peminjam BIGINT UNSIGNED NOT NULL,
+        tanggal_kembali DATE NOT NULL,
+        PRIMARY KEY (id_pengembalian),
+        UNIQUE KEY unik_pengembalian_peminjaman (id_peminjam)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+");
+if (!$buatTabelPengembalian) {
+    die('Gagal menyiapkan data pengembalian: ' . htmlspecialchars(mysqli_error($conn), ENT_QUOTES, 'UTF-8'));
+}
+
 /* =========================================================
    QUERY HANYA MENGAMBIL KOLOM YANG ADA DI DATABASE
 ========================================================= */
@@ -22,6 +36,8 @@ $query = "SELECT
           FROM pinjam_buku pb
           JOIN users u ON pb.id_user = u.id_user
           JOIN buku b ON pb.nomorbuku = b.nomorbuku
+          LEFT JOIN pengembalian_buku pg ON pg.id_peminjam = pb.id_peminjam
+          WHERE pg.id_peminjam IS NULL
           ORDER BY pb.id_peminjam DESC";
 
 $data = mysqli_query($conn, $query);
@@ -51,6 +67,7 @@ if (!$data) {
         <div class="nav-item">
             <a href="../dashboard/pinjam_buku.php">📖 Pinjam Buku</a>
             <a href="daftar_pinjam.php" class="active">📋 Daftar Peminjaman</a>
+            <a href="pengembalian_buku.php">↩️ Pengembalian Buku</a>
             <a href="../auth/logout.php">🚪 Logout</a>
         </div>
     </div>

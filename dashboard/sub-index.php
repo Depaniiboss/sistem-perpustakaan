@@ -1,4 +1,3 @@
-```php
 <?php
 session_start();
 include '../config/koneksi.php';
@@ -20,6 +19,7 @@ $data = mysqli_query($conn, "
 if (!$data) {
     die("Query Error: " . mysqli_error($conn));
 }
+$daftar_buku = mysqli_fetch_all($data, MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -145,7 +145,7 @@ if (!$data) {
 
             font-size: 15px;
 
-            color: #333;
+            color: #fff;
 
             outline: none;
 
@@ -172,7 +172,7 @@ if (!$data) {
 
         .search-box input::placeholder {
 
-            color: #666;
+            color: rgba(255, 251, 251, 0.9);
 
         }
 
@@ -201,7 +201,7 @@ if (!$data) {
 
             font-size: 15px;
 
-            color: #333;
+            color: #f0e6e6;
 
             outline: none;
 
@@ -308,6 +308,10 @@ if (!$data) {
                 📖 Daftar Peminjaman
             </a>
 
+            <a href="../dashboard/pengembalian_buku.php">
+                ↩️ Pengembalian Buku
+            </a>
+
 
             <a href="../auth/logout.php">
                 🚪 Logout
@@ -376,52 +380,20 @@ if (!$data) {
 
     <!-- Pilihan buku BK -->
     <select name="nomorbuku" id="nomorbuku">
-        <?php while ($buku = mysqli_fetch_assoc($data)): ?>
-            <option value="<?= $buku['nomorbuku']; ?>">
+        <?php if (count($daftar_buku) === 0): ?>
+            <option value="">Belum ada buku</option>
+        <?php endif; ?>
+        <?php foreach ($daftar_buku as $buku): ?>
+            <option value="<?= (int)$buku['nomorbuku']; ?>">
                 <?= htmlspecialchars($buku['kode_buku']); ?> -
                 <?= htmlspecialchars($buku['judul']); ?>
             </option>
-        <?php endwhile; ?>
+        <?php endforeach; ?>
     </select>
 
 </div>
 
-                    /*
-                     * $data berasal dari query:
-                     *
-                     * SELECT * FROM buku
-                     *
-                     * mysqli_fetch_assoc()
-                     * mengambil data satu per satu.
-                     */
-
-                    while ($buku = mysqli_fetch_assoc($data)):
-
-                    ?>
-
-                        <option
-
-                            value="<?= $buku['nomorbuku']; ?>"
-
-                        >
-
-                            <?= htmlspecialchars($buku['kode_buku']); ?>
-
-                            -
-
-                            <?= htmlspecialchars($buku['judul']); ?>
-
-                        </option>
-
-
-                    <?php endwhile; ?>
-
-                </select>
-
-            </div>
-
-        </div>
-
+</div>
 
         <!-- =================================================
              CARD BUKU
@@ -483,28 +455,15 @@ if (!$data) {
 
                     <?php
 
-                    /*
-                     * Query ulang karena $data sebelumnya
-                     * sudah digunakan oleh dropdown.
-                     */
-
-                    $data_tabel = mysqli_query($conn, "
-
-                        SELECT *
-
-                        FROM buku
-
-                        ORDER BY nomorbuku ASC
-
-                    ");
-
-
                     $no = 1;
-
-
-                    while ($row = mysqli_fetch_assoc($data_tabel)):
-
                     ?>
+
+                    <?php if (count($daftar_buku) === 0): ?>
+                        <tr>
+                            <td colspan="6">Belum ada data buku.</td>
+                        </tr>
+                    <?php else: ?>
+                    <?php foreach ($daftar_buku as $row): ?>
 
                         <tr>
 
@@ -566,7 +525,8 @@ if (!$data) {
                         </tr>
 
 
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
 
 
                 </tbody>
@@ -669,6 +629,10 @@ if (!$data) {
 
             });
 
+            if (!ditemukan) {
+                selectBuku.selectedIndex = -1;
+            }
+
         });
 
     </script>
@@ -712,4 +676,3 @@ if (!$data) {
 </body>
 
 </html>
-```

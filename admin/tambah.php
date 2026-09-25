@@ -12,7 +12,7 @@ window.addEventListener("popstate", function () {
 session_start();
 include '../config/koneksi.php';
 
-if(!isset($_SESSION['login'])){
+if(!isset($_SESSION['login']) || $_SESSION['login'] !== true || ($_SESSION['role'] ?? '') !== 'admin'){
     header("Location: ../auth/login.php");
     exit;
 }

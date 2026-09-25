@@ -179,7 +179,7 @@ $query = mysqli_query($conn, "SELECT id_user, username, nama_karyawan, role FROM
         }
         .badge.admin { background: #1976d2; }
         .badge.karyawan { background: #388e3c; }
-        .badge.user { background: #f57c00; }
+        .badge.pengguna { background: #76757a; }
 
         /* Form Perubahan Role */
         .form-role {
@@ -281,7 +281,7 @@ $query = mysqli_query($conn, "SELECT id_user, username, nama_karyawan, role FROM
                                 <select name="role">
                                     <option value="admin" <?= $row['role'] === 'admin' ? 'selected' : '' ?>>Admin</option>
                                     <option value="karyawan" <?= $row['role'] === 'karyawan' ? 'selected' : '' ?>>Karyawan</option>
-                                    <option value="user" <?= $row['role'] === 'user' ? 'selected' : '' ?>>User</option>
+                                    <option value="pengguna" <?= $row['role'] === 'pengguna' ? 'selected' : '' ?>>Pengguna</option>
                                 </select>
                                 
                                 <button type="submit" name="update_role" class="btn-simpan">Simpan</button>
